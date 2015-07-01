@@ -17,6 +17,6 @@
 
 * Travis runs generator tests
 
-## Next
+## 0.1.4
 
 * Simplify generator tests
