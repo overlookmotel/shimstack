@@ -11,3 +11,4 @@
 ## Next
 
 * Fix generators functionality
+* Tests

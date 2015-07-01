@@ -23,7 +23,9 @@
     "chai": "^2.3.0",
 	"jshint": "^2.7.0",
     "istanbul": "^0.3.14",
-    "coveralls": "^2.11.2"
+    "coveralls": "^2.11.2",
+    "bluebird": "^2.9.30",
+    "generator-supported": "0.0.1"
   },
   "keywords": [
     "middleware",
