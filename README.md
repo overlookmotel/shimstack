@@ -14,7 +14,7 @@
 
 A function stack is a stack of functions which execute one after the other, much like middleware. This module converts a function into a function stack.
 
-The difference between normal shimming using something like [shimmer](https://www.npmjs.com/package/shimmer) and shim stack is that when a function is shimmed multiple times, the shims execute in the order they were applied rather than in reverse order.
+The difference between normal shimming using something like [shimmer](https://www.npmjs.com/package/shimmer) and `shimstack` is that when a function is shimmed multiple times, the shims execute in the order they were applied - rather than in reverse order.
 
 ## Usage
 
@@ -129,14 +129,16 @@ f = function() {
 
 f = shimstack(f, function* requestId(next) {
     this.requestId = Math.random() * 1000000;
-    yield next();
+    var result = yield next();
+    return result;
 });
 
 f = shimstack(f, function* logRequest(next) {
     var requestId = this.requestId;
     console.log('Starting request ' + requestId);
-    yield next();
+    var result = yield next();
     console.log('Ended request ' + requestId);
+    return result;
 });
 ```
 
@@ -160,8 +162,6 @@ function addAll() {
 addAll = shimstack( addAll, { lastArg: true }, function() {
     var args = Array.prototype.slice.call(arguments),
         next = args.pop();
-
-    console.log({args: args});
 
     args = args.map( function(num) { return num * 2; } );
 
