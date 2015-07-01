@@ -21,8 +21,8 @@ chai.config.includeStack = true;
 describe('Works with Generators', function() {
 	it('yes', function() {
 		var fn = function(x) { return Promise.resolve(x); };
-		var stackFn = function*(x, next) { var y = yield next(x); return y; };
-		var stackFn2 = function*(x, next) { var y = yield next(x); return y; };
+		var stackFn = function*(x, next) { return yield next(x); };
+		var stackFn2 = function*(x, next) { return yield next(x); };
 
 		fn = shimstack(fn, stackFn);
 		fn = shimstack(fn, stackFn2);
