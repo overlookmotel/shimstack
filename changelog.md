@@ -2,3 +2,4 @@
 
 ## Next
 
+* Initial release
