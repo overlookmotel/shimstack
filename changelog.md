@@ -8,7 +8,7 @@
 
 * README update
 
-## Next
+## 0.1.2
 
 * Fix generators functionality
 * Tests
