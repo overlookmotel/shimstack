@@ -13,6 +13,6 @@
 * Fix generators functionality
 * Tests
 
-## Next
+## 0.1.3
 
 * Travis runs generator tests
