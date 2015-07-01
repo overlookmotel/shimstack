@@ -7,3 +7,7 @@
 ## 0.1.1
 
 * README update
+
+## Next
+
+* Fix generators functionality
