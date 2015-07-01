@@ -160,32 +160,45 @@ describe('Arguments are passed', function() {
 
 describe('`this` context', function() {
 	it('is maintained', function() {
-		var fn = function() { return 'a'; };
+		var fn = function() { return this.char; };
 		var stackFn = function(next) { return next() + this.char; };
 		var stackFn2 = function(next) { return next() + this.char; };
 
 		fn = shimstack(fn, stackFn);
 		fn = shimstack(fn, stackFn2);
 
-		var result = fn.call({char: 'b'});
-		expect(result).to.equal('abb');
+		var result = fn.call({char: 'a'});
+		expect(result).to.equal('aaa');
 	});
 
 	it('can be overriden', function() {
-		var fn = function() { return 'a'; };
-		var stackFn = function(next) { return next.call({char: 'c'}) + this.char; };
+		var fn = function() { return this.char; };
+		var stackFn = function(next) { return next.call({char: 'b'}) + this.char; };
 		var stackFn2 = function(next) { return next() + this.char; };
 
 		fn = shimstack(fn, stackFn);
 		fn = shimstack(fn, stackFn2);
 
-		var result = fn.call({char: 'b'});
-		expect(result).to.equal('acb');
+		var result = fn.call({char: 'a'});
+		expect(result).to.equal('aba');
 	});
 });
 
-describe('Works with Promises', function() {
-	it('yes', function() {
+describe('Promises', function() {
+	it('work without arguments', function() {
+		var fn = function() { return Promise.resolve('a'); };
+		var stackFn = function(next) { return next(); };
+		var stackFn2 = function(next) { return next(); };
+
+		fn = shimstack(fn, stackFn);
+		fn = shimstack(fn, stackFn2);
+
+		return fn().then(function(result) {
+			expect(result).to.equal('a');
+		});
+	});
+
+	it('work with arguments', function() {
 		var fn = function(x) { return Promise.resolve(x); };
 		var stackFn = function(x, next) { return next(x); };
 		var stackFn2 = function(x, next) { return next(x); };
@@ -195,6 +208,19 @@ describe('Works with Promises', function() {
 
 		return fn('a').then(function(result) {
 			expect(result).to.equal('a');
+		});
+	});
+
+	it('maintain `this` context', function() {
+		var fn = function() { return Promise.resolve(this.char); };
+		var stackFn = function(next) { var c = this.char; return next().then(function(x) { return x + c; }); };
+		var stackFn2 = function(next) { var c = this.char; return next().then(function(x) { return x + c; }); };
+
+		fn = shimstack(fn, stackFn);
+		fn = shimstack(fn, stackFn2);
+
+		return fn.call({char: 'a'}).then(function(result) {
+			expect(result).to.equal('aaa');
 		});
 	});
 });

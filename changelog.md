@@ -20,3 +20,7 @@
 ## 0.1.4
 
 * Simplify generator tests
+
+## Next
+
+* Additional tests
