@@ -24,3 +24,7 @@
 ## 0.1.5
 
 * Additional tests
+
+## Next
+
+* `this` context override applies to all later calls

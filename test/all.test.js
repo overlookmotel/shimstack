@@ -180,7 +180,7 @@ describe('`this` context', function() {
 		fn = shimstack(fn, stackFn2);
 
 		var result = fn.call({char: 'a'});
-		expect(result).to.equal('aba');
+		expect(result).to.equal('bba');
 	});
 });
 
