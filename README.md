@@ -10,6 +10,8 @@
 [![Dev dependency Status](https://img.shields.io/david/dev/overlookmotel/shimstack.svg)](https://david-dm.org/overlookmotel/shimstack)
 [![Coverage Status](https://img.shields.io/coveralls/overlookmotel/shimstack/master.svg)](https://coveralls.io/r/overlookmotel/shimstack)
 
+API is largely stable and there are tests for all features.
+
 ## What it does
 
 A function stack is a stack of functions which execute one after the other, much like middleware. This module converts a function into a function stack.
@@ -168,14 +170,12 @@ addAll = shimstack( addAll, { lastArg: true }, function() {
     return next.apply(this, args);
 });
 
-result =  addAll(1, 2, 3); // result = 12
+result = addAll(1, 2, 3); // result = 12
 ```
 
 ## Tests
 
 Use `npm test` to run the tests. Use `npm run cover` to check coverage.
-
-But there are no tests at present!
 
 ## Changelog
 

@@ -28,3 +28,7 @@
 ## 0.2.0
 
 * `this` context override applies to all later calls
+
+## Next
+
+* README update
