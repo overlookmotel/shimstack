@@ -40,5 +40,6 @@
 * Update dependencies + dev dependencies
 * Improve and clarify tests
 * Travis run on node v4 + v6
+* Code tidy
 * README tidy
 * Update license
