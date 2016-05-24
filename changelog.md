@@ -36,3 +36,4 @@
 ## Next
 
 * Refactor: move custom Error constructor to separate file
+* Update license
