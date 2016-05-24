@@ -175,6 +175,23 @@ addAll = shimstack( addAll, { lastArg: true }, function() {
 result = addAll(1, 2, 3); // result = 12
 ```
 
+#### first
+
+Adds `fn` to the bottom of the stack rather than the top. i.e. it will execute first.
+
+This is like normal shimming with something like [shimmer](https://www.npmjs.com/package/shimmer).
+
+```js
+function a(s) {return s};
+var b = shimstack( a, function addB(s, next) { return 'B' + next(s); } );
+var c = shimstack( b, function addC(s, next) { return 'C' + next(s); } );
+var d = shimstack( c, {first: true}, function addD(s, next) { return 'D' + next(s); } );
+var e = shimstack( d, {first: true}, function addE(s, next) { return 'E' + next(s); } );
+
+// Execution order: addE, addD, addB, addC
+result = e('A'); // result = 'EDBCA'
+```
+
 ## Tests
 
 Use `npm test` to run the tests. Use `npm run cover` to check coverage.

@@ -35,6 +35,7 @@
 
 ## Next
 
+* `first` option
 * Refactor: move custom Error constructor to separate file
 * Update dependencies + dev dependencies
 * Improve and clarify tests

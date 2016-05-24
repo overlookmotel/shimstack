@@ -194,6 +194,41 @@ describe('`this` context', function() {
 	});
 });
 
+describe('`first` option', function() {
+	it('executes before', function() {
+		var fn = function() { return 'a'; };
+		var stackFn = function(next) { return 'b' + next(); };
+		var stackFn2 = function(next) { return 'c' + next(); };
+
+		fn = shimstack(fn, stackFn);
+		fn = shimstack(fn, {first: true}, stackFn2);
+
+		expect(fn._shimstack.stack).to.have.lengthOf(2);
+		expect(fn._shimstack.stack[0].fn).to.equal(stackFn2);
+		expect(fn._shimstack.stack[1].fn).to.equal(stackFn);
+
+		expect(fn()).to.equal('cba');
+	});
+
+	it('executes most recently added first', function() {
+		var fn = function() { return 'a'; };
+		var stackFn = function(next) { return 'b' + next(); };
+		var stackFn2 = function(next) { return 'c' + next(); };
+		var stackFn3 = function(next) { return 'd' + next(); };
+
+		fn = shimstack(fn, stackFn);
+		fn = shimstack(fn, {first: true}, stackFn2);
+		fn = shimstack(fn, {first: true}, stackFn3);
+
+		expect(fn._shimstack.stack).to.have.lengthOf(3);
+		expect(fn._shimstack.stack[0].fn).to.equal(stackFn3);
+		expect(fn._shimstack.stack[1].fn).to.equal(stackFn2);
+		expect(fn._shimstack.stack[2].fn).to.equal(stackFn);
+
+		expect(fn()).to.equal('dcba');
+	});
+});
+
 describe('Promises', function() {
 	it('work without arguments', function() {
 		var fn = function() { return Promise.resolve('a'); };
