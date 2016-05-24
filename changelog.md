@@ -32,3 +32,7 @@
 ## 0.2.1
 
 * README update
+
+## Next
+
+* Refactor: move custom Error constructor to separate file
