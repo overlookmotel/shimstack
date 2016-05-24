@@ -33,7 +33,7 @@
 
 * README update
 
-## Next
+## 0.3.0
 
 * `first` option
 * Refactor: move custom Error constructor to separate file
