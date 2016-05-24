@@ -14,18 +14,18 @@
     "url": "https://github.com/overlookmotel/shimstack/issues"
   },
   "dependencies": {
-    "co-bluebird": "0.0.2",
-    "is-generator": "1.0.0",
-    "lodash": "3.8.0"
+    "co-bluebird": "1.1.0",
+    "is-generator": "1.0.3",
+    "lodash": "4.13.1"
   },
   "devDependencies": {
-    "mocha": "^2.2.4",
-    "chai": "^2.3.0",
-	"jshint": "^2.7.0",
+    "mocha": "^2.5.2",
+    "chai": "^3.5.0",
+	"jshint": "^2.9.2",
     "istanbul": "^0.3.14",
-    "coveralls": "^2.11.2",
-    "bluebird": "^2.9.30",
-    "generator-supported": "0.0.1"
+    "coveralls": "^2.11.9",
+    "bluebird": "^3.4.0",
+    "generator-supported": "^0.0.1"
   },
   "keywords": [
     "middleware",
