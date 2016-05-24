@@ -38,4 +38,5 @@
 * Refactor: move custom Error constructor to separate file
 * Update dependencies + dev dependencies
 * Travis run on node v4 + v6
+* README tidy
 * Update license

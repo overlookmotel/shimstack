@@ -22,7 +22,9 @@ The difference between normal shimming using something like [shimmer](https://ww
 
 ### Installation
 
-    npm install shimstack
+```
+npm install shimstack
+```
 
 ### Loading
 
