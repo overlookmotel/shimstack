@@ -40,6 +40,7 @@
 * Update dependencies + dev dependencies
 * Improve and clarify tests
 * Travis run on node v4 + v6
+* Replace Makefile with npm scripts
 * Code tidy
 * README tidy
 * Update license
