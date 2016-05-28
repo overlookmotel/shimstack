@@ -50,5 +50,6 @@
 * `use` method
 * `genWrap` option
 * Treat original functions which are generators as co-routines (breaking change)
+* Update dev dependencies
 * Code comments
 * README update
