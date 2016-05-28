@@ -124,7 +124,7 @@ f = shimstack(f, function logRequest(next) {
 
 #### With Generators
 
-Generators are automatically converted to promise-returning functions using [co-bluebird](https://www.npmjs.com/package/co-bluebird).
+Generators are automatically converted to promise-returning functions (co-routines) using [co-bluebird](https://www.npmjs.com/package/co-bluebird). An alternative wrapper can be specified, or generator wrapping disabled with `options.genWrap`.
 
 ```js
 f = function() {
@@ -191,6 +191,20 @@ var e = shimstack( d, {first: true}, function addE(s, next) { return 'E' + next(
 // Execution order: addE, addD, addB, addC
 result = e('A'); // result = 'EDBCA'
 ```
+
+#### genWrap
+
+By default, generators are treated as co-routines and wrapped into promise-returning functions using [co-bluebird](https://www.npmjs.com/package/co-bluebird).
+
+`genWrap` option allows specifying an alternate wrapping function, or disabling wrapping altogether.
+
+```js
+shimstack(obj, 'prop', { genWrap: co.wrap }, function *() { /* ... */ });
+```
+
+Set as `false` to disable generator wrapping.
+
+Set as `true` to use default wrapper. This is the default value.
 
 ## Tests
 

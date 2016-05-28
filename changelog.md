@@ -44,3 +44,7 @@
 * Code tidy
 * README tidy
 * Update license
+
+## Next
+
+* `genWrap` option

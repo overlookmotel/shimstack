@@ -273,7 +273,11 @@ describe('Promises', function() {
 if (generatorSupported) {
 	require('./generators.test.inc.js');
 } else {
-	describe('Works with Generators', function() {
+	describe('Generators', function() {
+		it('skipped');
+	});
+
+	describe('`genWrap` option', function() {
 		it('skipped');
 	});
 }

@@ -7,6 +7,7 @@
 var chai = require('chai'),
 	expect = chai.expect,
 	Promise = require('bluebird'),
+	co = require('co-bluebird'),
 	shimstack = require('../lib/');
 
 // init
@@ -55,6 +56,59 @@ describe('Generators', function() {
 
 		return fn.call({char: 'a'}).then(function(result) {
 			expect(result).to.equal('aaa');
+		});
+	});
+});
+
+describe('`genWrap` option', function() {
+	it('uses provided generator wrapper', function() {
+		var fn = function() { return Promise.resolve(this.char); };
+		var stackFn = function*(next) { return (yield next()) + this.char; };
+		var stackFn2 = function*(next) { return (yield next()) + this.char; };
+
+		var wrapper = function(fn) {
+			fn = co.wrap(fn);
+			fn.__test = true;
+			return fn;
+		};
+
+		var stacked = shimstack(fn, {genWrap: wrapper}, stackFn);
+		stacked = shimstack(stacked, {genWrap: wrapper}, stackFn2);
+
+		expect(stacked._shimstack).to.be.ok;
+		expect(stacked._shimstack.final).to.equal(fn);
+		expect(stacked._shimstack.stack).to.be.an.array;
+		expect(stacked._shimstack.stack).to.have.lengthOf(2);
+		expect(stacked._shimstack.stack[0].fn.__test).to.be.true;
+		expect(stacked._shimstack.stack[1].fn.__test).to.be.true;
+	});
+
+	it('does not wrap if false', function() {
+		var fn = function() { return Promise.resolve(this.char); };
+		var stackFn = function*(next) { return (yield next()) + this.char; };
+		var stackFn2 = function*(next) { return (yield next()) + this.char; };
+
+		var stacked = shimstack(fn, {genWrap: false}, stackFn);
+		stacked = shimstack(stacked, {genWrap: false}, stackFn2);
+
+		expect(stacked._shimstack).to.be.ok;
+		expect(stacked._shimstack.final).to.equal(fn);
+		expect(stacked._shimstack.stack).to.be.an.array;
+		expect(stacked._shimstack.stack).to.have.lengthOf(2);
+		expect(stacked._shimstack.stack[0].fn).to.equal(stackFn);
+		expect(stacked._shimstack.stack[1].fn).to.equal(stackFn2);
+	});
+
+	it('default behaviour if true', function() {
+		var fn = function() { return Promise.resolve('a'); };
+		var stackFn = function*(next) { return yield next(); };
+		var stackFn2 = function*(next) { return yield next(); };
+
+		fn = shimstack(fn, {genWrap: true}, stackFn);
+		fn = shimstack(fn, {genWrap: true}, stackFn2);
+
+		return fn().then(function(result) {
+			expect(result).to.equal('a');
 		});
 	});
 });
