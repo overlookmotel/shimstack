@@ -10,8 +10,6 @@
 [![Dev dependency Status](https://img.shields.io/david/dev/overlookmotel/shimstack.svg)](https://david-dm.org/overlookmotel/shimstack)
 [![Coverage Status](https://img.shields.io/coveralls/overlookmotel/shimstack/master.svg)](https://coveralls.io/r/overlookmotel/shimstack)
 
-API is largely stable and there are tests for all features.
-
 ## What it does
 
 A function stack is a stack of functions which execute one after the other, much like middleware. This module converts a function into a function stack.
@@ -46,11 +44,11 @@ double = shimstack( double );
 ```
 
 ```js
-var x = {
+var obj = {
     double: function(i) { return i * 2; }
 };
 
-shimstack( x, 'double' );
+shimstack( obj, 'double' );
 ```
 
 #### Adding to the stack
@@ -91,14 +89,14 @@ result = addOneAndDoubleAndAddOne(3); // result = 9
 With object methods:
 
 ```js
-var x = {
+var obj = {
     double: function(i) { return i * 2; }
 };
 
-shimstack( x, 'double', function(i, next) { return next(i) + 1; } );
-shimstack( x, 'double', function(i, next) { return next(i + 1); } );
+shimstack( obj, 'double', function(i, next) { return next(i) + 1; } );
+shimstack( obj, 'double', function(i, next) { return next(i + 1); } );
 
-result = x.double(3); // result = 9
+result = obj.double(3); // result = 9
 ```
 
 #### With Promises
@@ -129,17 +127,17 @@ Generators are automatically converted to promise-returning functions (co-routin
 An alternative wrapper can be specified, or generator wrapping disabled with `options.genWrap`.
 
 ```js
-f = function*() {
+var fn = function*() {
     return yield User.find({ where: {id: 1} }); // User.find() returns a Promise
 };
 
-f = shimstack(f, function* requestId(next) {
+fn = shimstack(fn, function* requestId(next) {
     this.requestId = Math.random() * 1000000;
     var result = yield next();
     return result;
 });
 
-f = shimstack(f, function* logRequest(next) {
+fn = shimstack(fn, function* logRequest(next) {
     var requestId = this.requestId;
     console.log('Starting request ' + requestId);
     var result = yield next();
@@ -229,6 +227,8 @@ To create an instance of `shimstack` which always uses an alternative wrapper, u
 ## Tests
 
 Use `npm test` to run the tests. Use `npm run cover` to check coverage.
+
+Generator tests only run on node v4 and above. To run them on node v0.12 in harmony mode, use `npm run test-harmony`.
 
 ## Changelog
 
