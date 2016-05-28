@@ -148,6 +148,21 @@ f = shimstack(f, function* logRequest(next) {
 });
 ```
 
+### `shimstack.use( [options] )` method
+
+Returns a new independent instance of `shimstack`. If `options` are provided, the new instance uses these as default options for all calls thereafter.
+
+```js
+var shimstack = require('shimstack').use( { genWrap: co.wrap } );
+
+// `gen` is wrapped using `co.wrap()` rather than the default
+shimstack(obj, 'prop', function* gen() { /* ... */ } );
+
+// default options can still be overridden on individual calls
+// `gen` is wrapped using the default wrapper
+shimstack(obj, 'prop', { genWrap: true }, function* gen() { /* ... */ } );
+```
+
 ### Options
 
 #### lastArg
@@ -208,6 +223,8 @@ shimstack(obj, 'prop', { genWrap: co.wrap }, function *() { /* ... */ });
 Set as `false` to disable generator wrapping.
 
 Set as `true` to use default wrapper. This is the default value.
+
+To create an instance of `shimstack` which always uses an alternative wrapper, use `shimstack.use( { genWrap: myWrapper } )`.
 
 ## Tests
 

@@ -229,6 +229,75 @@ describe('`first` option', function() {
 	});
 });
 
+describe('`use` method', function() {
+	it('creates new shimstack instance', function() {
+		var shimstack2 = shimstack.use();
+
+		expect(shimstack2).to.be.ok;
+		expect(shimstack2).not.to.equal(shimstack);
+	});
+
+	it('new instance has own use method', function() {
+		var shimstack2 = shimstack.use();
+		var shimstack3 = shimstack2.use();
+
+		expect(shimstack3).to.be.ok;
+		expect(shimstack3).not.to.equal(shimstack);
+		expect(shimstack3).not.to.equal(shimstack2);
+	});
+
+	it('uses provided options as defaults', function() {
+		var shimstack2 = shimstack.use({first: true});
+
+		var fn = function() { return 'a'; };
+		var stackFn = function(next) { return 'b' + next(); };
+		var stackFn2 = function(next) { return 'c' + next(); };
+
+		fn = shimstack2(fn, stackFn);
+		fn = shimstack2(fn, stackFn2);
+
+		expect(fn._shimstack.stack).to.have.lengthOf(2);
+		expect(fn._shimstack.stack[0].fn).to.equal(stackFn2);
+		expect(fn._shimstack.stack[1].fn).to.equal(stackFn);
+
+		expect(fn()).to.equal('cba');
+	});
+
+	it('options do not affect original instance', function() {
+		var shimstack2 = shimstack.use({first: true}); // jshint ignore:line
+
+		var fn = function() { return 'a'; };
+		var stackFn = function(next) { return 'b' + next(); };
+		var stackFn2 = function(next) { return 'c' + next(); };
+
+		fn = shimstack(fn, stackFn);
+		fn = shimstack(fn, stackFn2);
+
+		expect(fn._shimstack.stack).to.have.lengthOf(2);
+		expect(fn._shimstack.stack[0].fn).to.equal(stackFn);
+		expect(fn._shimstack.stack[1].fn).to.equal(stackFn2);
+
+		expect(fn()).to.equal('bca');
+	});
+
+	it('provided default options can be overriden', function() {
+		var shimstack2 = shimstack.use({first: true});
+
+		var fn = function() { return 'a'; };
+		var stackFn = function(next) { return 'b' + next(); };
+		var stackFn2 = function(next) { return 'c' + next(); };
+
+		fn = shimstack2(fn, {first: false}, stackFn);
+		fn = shimstack2(fn, {first: false}, stackFn2);
+
+		expect(fn._shimstack.stack).to.have.lengthOf(2);
+		expect(fn._shimstack.stack[0].fn).to.equal(stackFn);
+		expect(fn._shimstack.stack[1].fn).to.equal(stackFn2);
+
+		expect(fn()).to.equal('bca');
+	});
+});
+
 describe('Promises', function() {
 	it('work without arguments', function() {
 		var fn = function() { return Promise.resolve('a'); };

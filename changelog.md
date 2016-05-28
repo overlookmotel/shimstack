@@ -47,6 +47,7 @@
 
 ## Next
 
+* `use` method
 * `genWrap` option
 * Treat original functions which are generators as co-routines (breaking change)
 * Code comments
