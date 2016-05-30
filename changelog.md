@@ -45,7 +45,7 @@
 * README tidy
 * Update license
 
-## Next
+## 1.0.0
 
 * `use` method
 * `genWrap` option
