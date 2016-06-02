@@ -54,7 +54,7 @@
 * Code comments
 * README update
 
-## Next
+## 1.0.1
 
 * Fix: `this` context can be overridden for final function only
 * Refactor: less lengthy closures
