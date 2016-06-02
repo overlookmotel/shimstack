@@ -181,7 +181,7 @@ describe('`this` context', function() {
 		expect(result).to.equal('aaa');
 	});
 
-	it('can be overriden', function() {
+	it('can be overriden for later stack functions', function() {
 		var fn = function() { return this.char; };
 		var stackFn = function(next) { return next.call({char: 'b'}) + this.char; };
 		var stackFn2 = function(next) { return next() + this.char; };
@@ -191,6 +191,18 @@ describe('`this` context', function() {
 
 		var result = fn.call({char: 'a'});
 		expect(result).to.equal('bba');
+	});
+
+	it('can be overriden for original function', function() {
+		var fn = function() { return this.char; };
+		var stackFn = function(next) { return next() + this.char; };
+		var stackFn2 = function(next) { return next.call({char: 'b'}) + this.char; };
+
+		fn = shimstack(fn, stackFn);
+		fn = shimstack(fn, stackFn2);
+
+		var result = fn.call({char: 'a'});
+		expect(result).to.equal('baa');
 	});
 });
 

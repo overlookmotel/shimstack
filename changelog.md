@@ -53,3 +53,7 @@
 * Update dev dependencies
 * Code comments
 * README update
+
+## Next
+
+* Fix: `this` context can be overridden for final function only
