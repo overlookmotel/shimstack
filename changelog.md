@@ -57,3 +57,4 @@
 ## Next
 
 * Fix: `this` context can be overridden for final function only
+* Refactor: less lengthy closures
