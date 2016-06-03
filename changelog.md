@@ -63,4 +63,5 @@
 
 * Do not treat original functions which are generators as co-routines (breaking change)
 * `argumentsToArray` function made more efficient
+* Refactor: utility functions
 * Correct JSDoc comments
