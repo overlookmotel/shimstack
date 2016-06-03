@@ -58,3 +58,7 @@
 
 * Fix: `this` context can be overridden for final function only
 * Refactor: less lengthy closures
+
+## Next
+
+* Correct JSDoc comments
