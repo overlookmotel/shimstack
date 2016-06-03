@@ -61,5 +61,6 @@
 
 ## Next
 
+* Do not treat original functions which are generators as co-routines (breaking change)
 * `argumentsToArray` function made more efficient
 * Correct JSDoc comments

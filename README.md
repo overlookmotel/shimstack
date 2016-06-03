@@ -127,8 +127,8 @@ Generators are automatically converted to promise-returning functions (co-routin
 An alternative wrapper can be specified, or generator wrapping disabled with `options.genWrap`.
 
 ```js
-var fn = function*() {
-    return yield User.find({ where: {id: 1} }); // User.find() returns a Promise
+var fn = function() {
+    return User.find({ where: {id: 1} }); // User.find() returns a Promise
 };
 
 fn = shimstack(fn, function* requestId(next) {
@@ -214,7 +214,6 @@ By default, generators are treated as co-routines and wrapped into promise-retur
 `genWrap` option allows specifying an alternate wrapping function, or disabling wrapping altogether.
 
 ```js
-shimstack(function *() { /* ... */ }, { genWrap: co.wrap });
 shimstack(obj, 'prop', { genWrap: co.wrap }, function *() { /* ... */ });
 ```
 

@@ -21,7 +21,7 @@ chai.config.includeStack = true;
 
 describe('Generators', function() {
 	it('work without arguments', function() {
-		var fn = function*() { return yield Promise.resolve('a'); };
+		var fn = function() { return Promise.resolve('a'); };
 		var stackFn = function*(next) { return yield next(); };
 		var stackFn2 = function*(next) { return yield next(); };
 
@@ -34,7 +34,7 @@ describe('Generators', function() {
 	});
 
 	it('work with arguments', function() {
-		var fn = function*(x) { return yield Promise.resolve(x); };
+		var fn = function(x) { return Promise.resolve(x); };
 		var stackFn = function*(x, next) { return yield next(x); };
 		var stackFn2 = function*(x, next) { return yield next(x); };
 
@@ -47,7 +47,7 @@ describe('Generators', function() {
 	});
 
 	it('maintain `this` context', function() {
-		var fn = function*() { return yield Promise.resolve(this.char); };
+		var fn = function() { return Promise.resolve(this.char); };
 		var stackFn = function*(next) { return (yield next()) + this.char; };
 		var stackFn2 = function*(next) { return (yield next()) + this.char; };
 
@@ -62,7 +62,7 @@ describe('Generators', function() {
 
 describe('`genWrap` option', function() {
 	it('uses provided generator wrapper', function() {
-		var fn = function*() { return yield Promise.resolve('a'); };
+		var fn = function() { return Promise.resolve('a'); };
 		var stackFn = function*(next) { return yield next(); };
 		var stackFn2 = function*(next) { return yield next(); };
 
@@ -76,8 +76,8 @@ describe('`genWrap` option', function() {
 		stacked = shimstack(stacked, {genWrap: wrapper}, stackFn2);
 
 		expect(stacked._shimstack).to.be.ok;
-		expect(stacked._shimstack.final).not.to.equal(fn);
-		expect(stacked._shimstack.final.__test).to.be.true;
+		expect(stacked._shimstack.final).to.equal(fn);
+		expect(stacked._shimstack.final.__test).to.be.undefined;
 		expect(stacked._shimstack.stack).to.be.an.array;
 		expect(stacked._shimstack.stack).to.have.lengthOf(2);
 		expect(stacked._shimstack.stack[0].fn).not.to.equal(stackFn);
@@ -87,7 +87,7 @@ describe('`genWrap` option', function() {
 	});
 
 	it('does not wrap if false', function() {
-		var fn = function*() { return yield Promise.resolve('a'); };
+		var fn = function() { return Promise.resolve('a'); };
 		var stackFn = function*(next) { return yield next(); };
 		var stackFn2 = function*(next) { return yield next(); };
 
@@ -103,7 +103,7 @@ describe('`genWrap` option', function() {
 	});
 
 	it('default behaviour if true', function() {
-		var fn = function*() { return yield Promise.resolve('a'); };
+		var fn = function() { return Promise.resolve('a'); };
 		var stackFn = function*(next) { return yield next(); };
 		var stackFn2 = function*(next) { return yield next(); };
 
