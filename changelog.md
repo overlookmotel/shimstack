@@ -61,4 +61,5 @@
 
 ## Next
 
+* `argumentsToArray` function made more efficient
 * Correct JSDoc comments
