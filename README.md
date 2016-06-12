@@ -99,6 +99,61 @@ shimstack( obj, 'double', function(i, next) { return next(i + 1); } );
 result = obj.double(3); // result = 9
 ```
 
+#### Prototype methods
+
+If a method being shimmed is on an object's prototype, by default `shimstack` won't shim the prototype, but reference it on the object.
+
+```js
+function Classy() {};
+Classy.prototype.x = function() { return 'A'; };
+
+var obj = new Classy();
+shimstack( obj, 'x', function(next) { return 'B' + next(); } );
+result = obj.x(); // result = 'BA'
+
+var obj2 = new Classy();
+result = obj2.x(); // result = 'A'
+// NB the prototype has not been affected
+```
+
+You can also apply shims on the prototype itself:
+
+```js
+function Classy() {};
+Classy.prototype.x = function() { return 'A'; };
+
+var obj = new Classy();
+shimstack( obj, 'x', function(next) { return 'B' + next(); } );
+shimstack( Classy.prototype, 'x', function(next) { return 'C' + next(); } );
+
+result = obj.x(); // result = 'CBA'
+```
+
+Note that the shim added to `Classy.prototype.x` takes effect even though it's added *after* the shim on `obj.x`.
+
+The order of execution is by default to run shims on the prototype first, followed by the shims on the object.
+
+If the prototype itself has a prototype, the order of execution is from bottom of the prototype chain to top:
+
+```js
+function Shape() {}
+function Rectangle() {}
+util.inherits(Rectangle, Shape);
+function Square() {}
+util.inherits(Square, Rectangle);
+
+Shape.prototype.x = function() { return 'x'; };
+
+shimstack( Shape.prototype, 'x', function(next) { return 'Shape-' + next(); } );
+shimstack( Rectangle.prototype, 'x', function(next) { return 'Rectangle-' + next(); } );
+shimstack( Square.prototype, 'x', function(next) { return 'Square-' + next(); } );
+
+var square = new Square();
+result = square.x(); // result = 'Shape-Rectangle-Square-x'
+```
+
+Default behavior can be changed with the `protoInherit` and `protoFirst` options (see below).
+
 #### With Promises
 
 ```js
@@ -206,6 +261,18 @@ var e = shimstack( d, {first: true}, function addE(s, next) { return 'E' + next(
 // Execution order: addE, addD, addB, addC
 result = e('A'); // result = 'EDBCA'
 ```
+
+#### protoInherit
+
+When `true` (the default), shimming an object's method which is inherited from it's prototype doesn't affect the prototype, but references it so only affect the object itself (as in the examples above).
+
+Set to `false` to disable this.
+
+#### protoFirst
+
+When `true` (the default), shims on an object's prototype execute before the shims on the object itself, as in the examples above.
+
+Set to `false` to go "top to bottom" instead.
 
 #### genWrap
 

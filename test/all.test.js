@@ -6,6 +6,7 @@
 // modules
 var chai = require('chai'),
 	expect = chai.expect,
+	util = require('util'),
 	Promise = require('bluebird'),
 	generatorSupported = require('generator-supported'),
 	shimstack = require('../lib/');
@@ -203,6 +204,228 @@ describe('`this` context', function() {
 
 		var result = fn.call({char: 'a'});
 		expect(result).to.equal('baa');
+	});
+});
+
+describe('Prototype methods', function() {
+	describe('are inherited', function() {
+		describe('from prototype', function() {
+			it('when predefined', function() {
+				var M = function(p) {this.prop = p;};
+				M.prototype.act = function() {return this.prop;};
+
+				var m = new M('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('ba');
+			});
+
+			it('when defined after', function() {
+				var M = function(p) {this.prop = p;};
+				M.prototype.act = function() {return this.prop;};
+
+				var m = new M('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				M.prototype.act = function() {return this.prop + 'x';};
+
+				var result = m.act();
+				expect(result).to.equal('bax');
+			});
+		});
+
+		describe('from prototype of prototype', function() {
+			it('when predefined', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('ba');
+			});
+
+			it('when defined after', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				M.prototype.act = function() {return this.prop + 'x';};
+
+				var result = m.act();
+				expect(result).to.equal('bax');
+			});
+		});
+	});
+
+	describe('have their stack functions called', function() {
+		describe('from prototype', function() {
+			it('when predefined', function() {
+				var M = function(p) {this.prop = p;};
+				M.prototype.act = function() {return this.prop;};
+
+				shimstack(M.prototype, 'act', function(next) {return 'c' + next();});
+
+				var m = new M('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('cba');
+			});
+
+			it('when defined after', function() {
+				var M = function(p) {this.prop = p;};
+				M.prototype.act = function() {return this.prop;};
+
+				var m = new M('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				shimstack(M.prototype, 'act', function(next) {return 'c' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('cba');
+			});
+
+			it('when redefined after', function() {
+				var M = function(p) {this.prop = p;};
+				M.prototype.act = function() {return this.prop;};
+
+				shimstack(M.prototype, 'act', function(next) {return 'd' + next();});
+
+				var m = new M('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				shimstack(M.prototype, 'act', function(next) {return 'c' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('dcba');
+			});
+		});
+
+		describe('from prototype of prototype', function() {
+			it('when predefined', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				shimstack(M.prototype, 'act', function(next) {return 'c' + next();});
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('cba');
+			});
+
+			it('when defined after', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				shimstack(M.prototype, 'act', function(next) {return 'c' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('cba');
+			});
+
+			it('when redefined after', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				shimstack(M.prototype, 'act', function(next) {return 'd' + next();});
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				shimstack(M.prototype, 'act', function(next) {return 'c' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('dcba');
+			});
+		});
+
+		describe('from both prototype and prototype of prototype', function() {
+			it('when predefined', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				shimstack(M.prototype, 'act', function(next) {return 'd' + next();});
+				shimstack(MM.prototype, 'act', function(next) {return 'c' + next();});
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('dcba');
+			});
+
+			it('when prototype defined after', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				shimstack(M.prototype, 'act', function(next) {return 'd' + next();});
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				shimstack(MM.prototype, 'act', function(next) {return 'c' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('dcba');
+			});
+
+			it('when prototype of prototype defined after', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				shimstack(MM.prototype, 'act', function(next) {return 'c' + next();});
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				shimstack(M.prototype, 'act', function(next) {return 'd' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('dcba');
+			});
+
+			it('when both defined after', function() {
+				var M = function(p) {this.prop = p;};
+				var MM = function(p) {M.call(this, p);};
+				util.inherits(MM, M);
+				M.prototype.act = function() {return this.prop;};
+
+				var m = new MM('a');
+				shimstack(m, 'act', function(next) {return 'b' + next();});
+
+				shimstack(M.prototype, 'act', function(next) {return 'd' + next();});
+				shimstack(MM.prototype, 'act', function(next) {return 'c' + next();});
+
+				var result = m.act();
+				expect(result).to.equal('dcba');
+			});
+		});
 	});
 });
 

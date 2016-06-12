@@ -61,6 +61,7 @@
 
 ## Next
 
+* Inherit from prototype (breaking change)
 * Do not treat original functions which are generators as co-routines (breaking change)
 * `argumentsToArray` function made more efficient
 * Refactor: utility functions
