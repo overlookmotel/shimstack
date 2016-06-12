@@ -59,7 +59,7 @@
 * Fix: `this` context can be overridden for final function only
 * Refactor: less lengthy closures
 
-## Next
+## 2.0.0
 
 * Inherit from prototype (breaking change)
 * Do not treat original functions which are generators as co-routines (breaking change)
