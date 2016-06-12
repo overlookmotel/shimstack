@@ -65,3 +65,4 @@
 * `argumentsToArray` function made more efficient
 * Refactor: utility functions
 * Correct JSDoc comments
+* Update `.npmignore`
