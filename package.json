@@ -21,9 +21,9 @@
   "devDependencies": {
     "mocha": "^2.5.3",
     "chai": "^3.5.0",
-	"jshint": "^2.9.2",
+    "jshint": "^2.9.2",
     "istanbul": "^0.4.3",
-    "coveralls": "^2.11.9",
+    "coveralls": "^2.11.11",
     "bluebird": "^3.4.0",
     "generator-supported": "^0.0.1"
   },
