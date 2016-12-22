@@ -24,7 +24,7 @@
 	"jshint": "^2.9.2",
     "istanbul": "^0.4.3",
     "coveralls": "^2.11.9",
-    "bluebird": "^3.4.0",
+    "bluebird": "^3.4.7",
     "generator-supported": "^0.0.1"
   },
   "keywords": [
