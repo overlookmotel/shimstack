@@ -1,5 +1,7 @@
 # shimstack.js
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/overlookmotel/shimstack.svg)](https://greenkeeper.io/)
+
 # Middleware for functions
 
 ## Current status
